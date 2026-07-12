@@ -52,7 +52,10 @@ const createTask = async (req, res) => {
 
     res.status(201).json(task);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    if(error.name === "ValidationError"){
+      return res.status(400).json({message: "Required fields are missing"})
+    }
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 

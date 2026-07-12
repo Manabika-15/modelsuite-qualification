@@ -74,6 +74,7 @@ const seedData = async () => {
       title: 'Social Media Content Calendar',
       description:
         'Plan and draft 30 days of social content across LinkedIn, Twitter, and Instagram for the talent portal launch.',
+      status: 'Open',
       assignedTo: talent2._id,
       dueDate: '2024-07-01',
       createdBy: admin._id,

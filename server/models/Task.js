@@ -3,13 +3,16 @@ const taskSchema = new mongoose.Schema(
   {
     title: {
       type: String,
+      required: true,
     },
     description: {
       type: String,
+      required: true,
     },
     status: {
       type: String,
       enum: ['Open', 'Claimed', 'Submitted', 'Approved', 'Rejected'],
+      required: true,
     },
     assignedTo: {
       type: mongoose.Schema.Types.ObjectId,
@@ -17,6 +20,7 @@ const taskSchema = new mongoose.Schema(
     },
     dueDate: {
       type: String,
+      required: true,
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
