@@ -41,6 +41,14 @@ const createTask = async (req, res) => {
   const { title, description, status, assignedTo, dueDate } = req.body;
 
   try {
+    const due = new Date(dueDate)
+    const today = new Date()
+
+    today.setHours(0, 0, 0, 0)
+
+    if (due < today) {
+      return res.status(400).json({ message: "Due date cannot be in the past" })
+    }
     const task = await Task.create({
       title,
       description,
@@ -52,8 +60,8 @@ const createTask = async (req, res) => {
 
     res.status(201).json(task);
   } catch (error) {
-    if(error.name === "ValidationError"){
-      return res.status(400).json({message: "Required fields are missing"})
+    if (error.name === "ValidationError") {
+      return res.status(400).json({ message: "Required fields are missing" })
     }
     return res.status(500).json({ message: "Server Error" });
   }
