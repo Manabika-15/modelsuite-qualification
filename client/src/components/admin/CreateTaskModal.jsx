@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { createTask, fetchTalents } from '../../api/tasks';
 
 const STATUS_OPTIONS = ['Open', 'Claimed', 'Submitted', 'Approved', 'Rejected'];
@@ -10,7 +10,7 @@ const CreateTaskModal = ({ onClose, onCreated }) => {
   const [form, setForm] = useState({ title: '', description: '', status: 'Open', assignedTo: '', dueDate: '' });
   const [talents, setTalents] = useState([]);
   const [loadingTalents, setLoadingTalents] = useState(false);
-  useState(() => {
+  useEffect(() => {
     setLoadingTalents(true);
     fetchTalents()
       .then(({ data }) => setTalents(data))
@@ -18,16 +18,23 @@ const CreateTaskModal = ({ onClose, onCreated }) => {
       .finally(() => setLoadingTalents(false));
   }, []);
 
+  const [creating, setCreating] = useState(false)
+
   const handleChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setCreating(true)
+
     try {
       const { data } = await createTask({ ...form, assignedTo: form.assignedTo || undefined });
       onCreated(data);
       onClose();
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to create task');
+    } finally {
+      setCreating(false)
     }
   };
 
@@ -90,10 +97,13 @@ const CreateTaskModal = ({ onClose, onCreated }) => {
               className="px-5 py-2.5 bg-bg-input text-text-muted border border-border rounded-lg text-sm font-medium cursor-pointer hover:bg-bg-hover hover:text-text-primary transition-all font-sans">
               Cancel
             </button>
-            <button type="submit"
-              className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white cursor-pointer btn-gradient border-none font-sans">
-              Create Task
-            </button>
+            <button
+  type="submit"
+  disabled={creating}
+  className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white border-none font-sans btn-gradient disabled:opacity-60 disabled:cursor-not-allowed"
+>
+  {creating ? "Creating..." : "Create Task"}
+</button>
           </div>
         </form>
       </div>
