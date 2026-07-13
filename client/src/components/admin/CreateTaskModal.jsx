@@ -9,9 +9,8 @@ const labelCls  = 'text-[11px] font-semibold uppercase tracking-[0.5px] text-tex
 const CreateTaskModal = ({ onClose, onCreated }) => {
   const [form, setForm] = useState({ title: '', description: '', status: 'Open', assignedTo: '', dueDate: '' });
   const [talents, setTalents] = useState([]);
-  const [loadingTalents, setLoadingTalents] = useState(false);
+  const [loadingTalents, setLoadingTalents] = useState(true);
   useEffect(() => {
-    setLoadingTalents(true);
     fetchTalents()
       .then(({ data }) => setTalents(data))
       .catch(() => alert('Failed to load talents'))
